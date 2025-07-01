@@ -1,16 +1,59 @@
 #include <stdio.h>
 #include <math.h>
 
-void merge_sort(int unsortedArr[], int unsortedArrSize);
+int *merge(int arr[], int rightArrIndex, int arrSize, int *mergedArr);
 void printArr(int arr[], int arrSize);
-void test(int leftUnsortedArr[], int leftUnsortedArrSize, int rightUnsortedArr[], int rightUnsortedArrSize);
 
 int main(void) {
-	int unsortedArr[] = { 6, 8, 7, 0, 1, 5, 9, 11, 10, 3, 12, 2, 4 };
-	int unsortedArrSize = sizeof(unsortedArr) / sizeof(unsortedArr[0]);
-	merge_sort(unsortedArr, unsortedArrSize);
-	
+	int notMergedArr[] = { 7, 8, 1, 2 };
+	int notMergedArrSize = sizeof(notMergedArr) / sizeof(notMergedArr[0]);
+	int mergedArrSize = notMergedArrSize;
+	int emptyMergedArr[mergedArrSize];
+	int startIndex = 0;
+	int *mergedArr = merge(notMergedArr, startIndex, mergedArrSize, emptyMergedArr);
+
+	printArr(mergedArr, mergedArrSize);
 	return 0;
+}
+
+int *merge(int arr[], int leftArrIndex, int arrSize, int *mergedArr) {
+	float sum = leftArrIndex + arrSize;
+	int midIndex = round( sum / (2 * 1.0f) );
+	int rightArrIndex = arrSize - midIndex;
+	int mergedArrIndex = 0;
+
+	while (leftArrIndex < midIndex && rightArrIndex < arrSize) {
+		int leftValue = arr[leftArrIndex];
+		int rightValue = arr[rightArrIndex];
+
+		if (leftValue < rightValue) {
+			mergedArr[mergedArrIndex] = leftValue;
+			leftArrIndex++;
+		} else {
+			mergedArr[mergedArrIndex] = rightValue;
+			rightArrIndex++;
+		}
+		
+		mergedArrIndex++;
+	}
+
+	while (leftArrIndex < midIndex) {
+		int leftValue = arr[leftArrIndex];
+
+		mergedArr[mergedArrIndex] = leftValue;
+		leftArrIndex++;
+		mergedArrIndex++;
+	}
+
+	while (rightArrIndex < arrSize) {
+		int rightValue = arr[rightArrIndex];
+
+		mergedArr[mergedArrIndex] = rightValue;
+		rightArrIndex++;
+		mergedArrIndex++;
+	}
+
+	return mergedArr;
 }
 
 void printArr(int arr[], int arrSize) {
@@ -18,85 +61,6 @@ void printArr(int arr[], int arrSize) {
 		int number = arr[i];
 		printf("%d\n", number);
 	}
+
 	printf("\n");
-}
-
-void merge_sort(int unsortedArr[], int unsortedArrSize) {
-	if (unsortedArrSize <= 1) return;
-
-	int halfUnsortedArrSize = round(unsortedArrSize / 2);
-	int leftUnsortedArrSize = halfUnsortedArrSize;
-	int rightUnsortedArrSize = halfUnsortedArrSize;
-	if (unsortedArrSize % 2 == 1) leftUnsortedArrSize++;
-	int leftUnsortedArr[leftUnsortedArrSize];
-	int rightUnsortedArr[rightUnsortedArrSize];
-
-	for (int i = 0; i < unsortedArrSize; i++) {
-		if (i < leftUnsortedArrSize) {
-			leftUnsortedArr[i] = unsortedArr[i];
-		} else {
-			rightUnsortedArr[i - leftUnsortedArrSize] = unsortedArr[i];
-		}
-	}
-
-	merge_sort(leftUnsortedArr, leftUnsortedArrSize);
-	merge_sort(rightUnsortedArr, rightUnsortedArrSize);
-
-	int mergedArr[leftUnsortedArrSize + rightUnsortedArrSize];
-	int mergedArrIndex = 0;
-	int leftArrIndex = 0;
-	int rightArrIndex = 0;
-
-	while (leftArrIndex < leftUnsortedArrSize || rightArrIndex < rightUnsortedArrSize) {
-		int leftNum = leftUnsortedArr[leftArrIndex];
-		int rightNum = rightUnsortedArr[rightArrIndex];
-
-		if (rightArrIndex >= rightUnsortedArrSize) {
-			mergedArr[mergedArrIndex] = leftNum;
-			leftArrIndex++;
-		} else if (leftArrIndex >= leftUnsortedArrSize) {
-			mergedArr[mergedArrIndex] = rightNum;
-			rightArrIndex++;
-		} else if (leftNum < rightNum) {
-			mergedArr[mergedArrIndex] = leftNum;
-			leftArrIndex++;
-		} else {
-			mergedArr[mergedArrIndex] = rightNum;
-			rightArrIndex++;
-		}
-
-		mergedArrIndex++;
-	}
-
-	printArr(mergedArr, leftUnsortedArrSize + rightUnsortedArrSize);
-}
-
-void test(int leftUnsortedArr[], int leftUnsortedArrSize, int rightUnsortedArr[], int rightUnsortedArrSize) {
-	int mergedArr[leftUnsortedArrSize + rightUnsortedArrSize];
-	int mergedArrIndex = 0;
-	int leftArrIndex = 0;
-	int rightArrIndex = 0;
-
-	while (leftArrIndex < leftUnsortedArrSize || rightArrIndex < rightUnsortedArrSize) {
-		int leftNum = leftUnsortedArr[leftArrIndex];
-		int rightNum = rightUnsortedArr[rightArrIndex];
-
-		if (rightArrIndex >= rightUnsortedArrSize) {
-			mergedArr[mergedArrIndex] = leftNum;
-			leftArrIndex++;
-		} else if (leftArrIndex >= leftUnsortedArrSize) {
-			mergedArr[mergedArrIndex] = rightNum;
-			rightArrIndex++;
-		} else if (leftNum < rightNum) {
-			mergedArr[mergedArrIndex] = leftNum;
-			leftArrIndex++;
-		} else {
-			mergedArr[mergedArrIndex] = rightNum;
-			rightArrIndex++;
-		}
-
-		mergedArrIndex++;
-	}
-
-	printArr(mergedArr, leftUnsortedArrSize + rightUnsortedArrSize);
 }
